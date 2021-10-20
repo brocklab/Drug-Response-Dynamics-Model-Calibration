@@ -2,7 +2,7 @@
 A set of MATLAB scripts to calibrate and validate three drug response models to experimental data with a set of doxorubicin response data in breast cancer cell lines
 
 The scripts "Calibrate_Growth_Models" and "Leave_One_Out_Validation_vary_t_r" are the central scripts used to process the data, while all other scripts are called by them 
-(and must therefore be present in the same folder for MATLAB to run smoothly).
+(and must therefore be present in the same folder for MATLAB to run smoothly).They can be found under "Model-Calibration-and-Validation-Scripts". 
 
 Calibrate_Growth_Models is run first; the user must specify the cell number data file in line 9 and the matching conditions file in line 14, and must also enter the desired name
 for the calibration output file to be generated, in line 18.
@@ -17,10 +17,15 @@ should be entered; the only important thing to note is that the recovery and t_r
 corresponds to the cell number curve in column B of the cell number curve file, the next cell down should have the value corresponding to column C, and so on.  The 
 values required for the conditions file are:
 
-1.The number of replicates in the data set
-2.The date and time that corresponds to 0 elapsed time in the cell number curves
-3.The date and time at which the final treatment started for this set of experimental replicates
-4.For each replicate, whetherthat replicate ever restarted proliferation during the experiment in Boolean –0 if the replicate never recovered the ability to proliferate 
+1. The number of replicates in the data set
+
+2. The date and time that corresponds to 0 elapsed time in the cell number curves
+
+3. The date and time at which the final treatment started for this set of experimental replicates
+
+4. For each replicate, whetherthat replicate ever restarted proliferation during the experiment in Boolean –0 if the replicate never recovered the ability to proliferate 
 after treatment, 1 if it started growing
-5.The proliferation delay (tr) value for each replicate that did recover
-6.Lower and upper bounds as well as initial guesses for each parameter; since the parameters function slightly differently in each model, they can be specified separately for each.  The bounds are generally determined based on the limits of physical or mathematical possibility:  the resistant fraction fralways has a lower bound of 0 and an upper bound of 1, for example, while the growth rate grhas a lower bound based on the limit of what can be detected in the 600 hour time frame of these experiments and an upper bound set several times higher than the maximum growth rate I’ve ever observed in these cell lines.
+
+5. The proliferation delay (tr) value for each replicate that did recover
+
+6. Lower and upper bounds as well as initial guesses for each parameter; since the parameters function slightly differently in each model, they can be specified separately for each.  The bounds are generally determined based on the limits of physical or mathematical possibility:  the resistant fraction fralways has a lower bound of 0 and an upper bound of 1, for example, while the growth rate grhas a lower bound based on the limit of what can be detected in the 600 hour time frame of these experiments and an upper bound set several times higher than the maximum growth rate I’ve ever observed in these cell lines.
