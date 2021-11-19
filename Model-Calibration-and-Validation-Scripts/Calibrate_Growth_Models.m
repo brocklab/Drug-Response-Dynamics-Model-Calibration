@@ -6,16 +6,21 @@ clc
 %should be an excel sheet with the time vector in the first column and the
 %n cell number vectors in columns 2-(n+1).  There should be no headers
 
-data = xlsread('GH1818_75nM_working_mod_6_15.xlsx');
+data = xlsread('GH1909_200nM_working_mod_11_09.xlsx');
 num_time_points = length(data);
 
 %Read in all of the auxiliary information:  t_r values, etc.
 
-conditions = xlsread('GH1818_75nM_conditions.xlsx');
+conditions = xlsread('GH1909_200nM_conditions.xlsx');
 
 %Specify the name you want to use for the output file
 
-output_filename = 'GH1818_75nM_model_calibration_output.xlsx';
+output_filename = 'GH1909_200nM_model_calibration_output_v2.xlsx';
+
+%Specify the name you want to use for a separate output file containing the
+%cell number curves for the resistant and sensitive cell compartments.
+
+RS_output_filename = 'GH1909_200nM_model_calibration_RS_output_v2.xlsx';
 
 %Extract key data from conditions sheet
 
@@ -141,6 +146,27 @@ for m = 1:num_rep
     model_2_final_forward(:,m+1) = model_2_intermediate(:,2);
     model_3_final_forward(:,1) = extended_t_vector;
     model_3_final_forward(:,m+1) = model_3_intermediate(:,2);
+
+    model_1_RSintermediate = Model_1_RSForward(N_0_vector(m),extended_t_vector,g_0,model_1_z_output(m,4),model_1_z_output(m,1),model_1_z_output(m,2),model_1_z_output(m,3),model_1_z_output(m,5),t_r);
+    model_2_RSintermediate = Model_2_RSForward(N_0_vector(m),extended_t_vector,g_0,model_2_z_output(m,4),model_2_z_output(m,1),model_2_z_output(m,2),model_2_z_output(m,3),model_2_z_output(m,5),t_r);
+    model_3_RSintermediate = Model_3_RSForward(N_0_vector(m),extended_t_vector,model_3_z_output(m,4),model_3_z_output(m,1),model_3_z_output(m,2),model_3_z_output(m,3),t_r);
+
+
+    model_1_R_forward(:,1) = extended_t_vector;
+    model_1_R_forward(:,m+1) = model_1_RSintermediate(:,3);
+    model_2_R_forward(:,1) = extended_t_vector;
+    model_2_R_forward(:,m+1) = model_2_RSintermediate(:,3);
+    model_3_R_forward(:,1) = extended_t_vector;
+    model_3_R_forward(:,m+1) = model_3_RSintermediate(:,3);
+
+    model_1_S_forward(:,1) = extended_t_vector;
+    model_1_S_forward(:,m+1) = model_1_RSintermediate(:,4);
+    model_2_S_forward(:,1) = extended_t_vector;
+    model_2_S_forward(:,m+1) = model_2_RSintermediate(:,4);
+    model_3_S_forward(:,1) = extended_t_vector;
+    model_3_S_forward(:,m+1) = model_3_RSintermediate(:,4);
+
+
     model_1_Death_Only_final_forward(:,1) = extended_t_vector;
     model_1_Death_Only_final_forward(:,m+1) = model_1_Death_Only_intermediate(:,2);
     model_2_Death_Only_final_forward(:,1) = extended_t_vector;
@@ -285,6 +311,14 @@ for p = 1:num_rep
 end
 
 %Write all the calibrated values into an output file:
+
+writematrix( model_1_R_forward,RS_output_filename,'Sheet','Model 1 R Curves','Range','B2');
+writematrix( model_2_R_forward,RS_output_filename,'Sheet','Model 2 R Curves','Range','B2');
+writematrix( model_3_R_forward,RS_output_filename,'Sheet','Model 3 R Curves','Range','B2');
+writematrix( model_1_S_forward,RS_output_filename,'Sheet','Model 1 S Curves','Range','B2');
+writematrix( model_2_S_forward,RS_output_filename,'Sheet','Model 2 S Curves','Range','B2');
+writematrix( model_3_S_forward,RS_output_filename,'Sheet','Model 3 S Curves','Range','B2');
+
 
 writematrix(model_1_final_forward,output_filename,'Sheet','Model 1 Curves','Range','B2');
 writematrix(model_1_z_output,output_filename,'Sheet','Model 1 Parameters','Range','B2');
